@@ -1,13 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import japanize_matplotlib
+import matplotlib.animation as animation
 import sys
 from tqdm import tqdm
 
 #ユーザーが与える変数
-spase = 100 #メッシュ数
+spase = 10 #メッシュ数
 time = 1 #時間区分数
-d_time = 0.00005 #時間変化量
+d_time = 0.005 #時間変化量
 loop = 100 #計算の反復回数
 
 #自動的に算出する変数

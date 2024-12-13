@@ -1,15 +1,12 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-import japanize_matplotlib
 import sys
 from tqdm import tqdm
 
 # ユーザーが与える変数
 x_spase = 50 # x軸のメッシュ数
 y_spase = 50 # y軸のメッシュ数
-time = 1  # 時間区分数
-d_time = 0.00001  # 時間変化量
+time = 5  # 時間区分数
+d_time = 0.00002  # 時間変化量
 loop = 10  # 計算の反復回数
 ppv = 1 # 物性値
 
@@ -45,7 +42,7 @@ for i in range(x_grids):
         if y_grids*0.4 <= j | j <= y_grids*0.6:
             ppv_list[i][j] = 1
         else:
-            ppv_list[i][j] = 0.05
+            ppv_list[i][j] = 1
 
 
 #境界条件の設定, boun = 境界の値
@@ -53,11 +50,11 @@ boun = 40
 for i in range(num_time):
     for j in x_division:
         t_change[i][0][j] = boun
-        t_change[i][x_spase][j] = boun
+        t_change[i][x_spase][j] = 0
 for i in range(num_time):
     for j in y_division:
         t_change[i][j][0] = boun
-        t_change[i][j][y_spase] = boun
+        t_change[i][j][y_spase] = 0
 
 #シミュレーションプログラム
 for _ in tqdm(range(loop), desc="proc1", ncols=80):
@@ -76,29 +73,3 @@ for _ in tqdm(range(loop), desc="proc1", ncols=80):
         """
 
 np.save('np_save', t_change)
-
-X, Y = np.mgrid[0:x_grids, 0:y_grids]
-X, Y = np.round(X * dx_division, 3), np.round(Y * dy_division, 3)
-
-# 図の初期設定
-fig, ax = plt.subplots()
-cax = ax.imshow(t_change[0], cmap='CMRmap', interpolation='nearest')
-fig.colorbar(cax)  # カラーバーを追加
-
-# フレーム番号表示用のテキスト
-frame_text = ax.text(0.02, 0.95, '', color='white', fontsize=12,
-                    transform=ax.transAxes, bbox=dict(facecolor='black', alpha=0.5))
-
-speed = int(num_time / 200) #再生速度
-
-# フレーム更新関数
-def update(frame):
-    cax.set_array(t_change[int(frame * speed)])
-    frame_text.set_text(f'time: {round((frame * speed) * d_time, 4)}/{time}')  # フレーム番号を更新
-    return cax, frame_text
-
-# アニメーション作成
-ani = FuncAnimation(fig, update, frames=int(num_time / speed), interval=0, blit=True)
-
-# アニメーション表示
-plt.show()

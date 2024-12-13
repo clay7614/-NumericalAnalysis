@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import japanize_matplotlib
-from tqdm import tqdm
 
 t_change = np.load('np_save.npy')
 
